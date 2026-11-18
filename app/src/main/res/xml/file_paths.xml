@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <files-path name="clipfree_clips" path="clips/" />
+    <files-path name="clipfree_exports" path="exports/" />
+    <files-path name="clipfree_thumbnails" path="thumbnails/" />
+    <cache-path name="clipfree_cache" path="." />
+</paths>
