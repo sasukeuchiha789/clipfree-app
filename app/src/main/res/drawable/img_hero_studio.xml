@@ -1,0 +1,71 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="360dp"
+    android:height="200dp"
+    android:viewportWidth="360"
+    android:viewportHeight="200">
+    <!-- Deep studio backdrop -->
+    <path android:pathData="M0,0h360v200h-360z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="0"
+                android:startY="0"
+                android:endX="360"
+                android:endY="200"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#FF1B1729" />
+                <item android:offset="0.55" android:color="#FF291F48" />
+                <item android:offset="1.0" android:color="#FF17151F" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- Ambient violet glow -->
+    <path android:pathData="M180,100m-110,0a110,110 0,1 1,220 0a110,110 0,1 1,-220 0">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:centerX="180"
+                android:centerY="100"
+                android:gradientRadius="110"
+                android:type="radial">
+                <item android:offset="0.0" android:color="#667652E8" />
+                <item android:offset="1.0" android:color="#007652E8" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- Horizontal long-form video frame (left) -->
+    <path
+        android:pathData="M26,64 L134,64 A10,10 0 0 1 144,74 L144,126 A10,10 0 0 1 134,136 L26,136 A10,10 0 0 1 16,126 L16,74 A10,10 0 0 1 26,64 Z"
+        android:fillColor="#FF242132"
+        android:strokeColor="#FF7652E8"
+        android:strokeWidth="1.5" />
+    <!-- Waveform bars inside long video -->
+    <path android:pathData="M34,94h4v12h-4z M44,86h4v28h-4z M54,90h4v20h-4z M64,80h4v40h-4z M74,88h4v24h-4z M84,82h4v36h-4z M94,92h4v16h-4z M104,84h4v32h-4z M114,90h4v20h-4z M124,95h4v10h-4z"
+        android:fillColor="#FFB9A6F6" />
+    <!-- AI Transform Beam -->
+    <path android:pathData="M152,98 L194,98 L194,102 L152,102 Z" android:fillColor="#FF9878FF" />
+    <path android:pathData="M173,82 L177,95 L190,99 L177,103 L173,116 L169,103 L156,99 L169,95 Z"
+        android:fillColor="#FFFFFFFF" />
+    <!-- Three 9:16 vertical short cards (right) -->
+    <path
+        android:pathData="M210,44 L248,44 A8,8 0 0 1 256,52 L256,144 A8,8 0 0 1 248,152 L210,152 A8,8 0 0 1 202,144 L202,52 A8,8 0 0 1 210,44 Z"
+        android:fillColor="#FF2D2744"
+        android:strokeColor="#FFB9A6F6"
+        android:strokeWidth="1.2" />
+    <path android:pathData="M210,124h38v6h-38z M214,134h30v4h-30z" android:fillColor="#FF9878FF" />
+    <path
+        android:pathData="M268,30 L314,30 A10,10 0 0 1 324,40 L324,158 A10,10 0 0 1 314,168 L268,168 A10,10 0 0 1 258,158 L258,40 A10,10 0 0 1 268,30 Z"
+        android:fillColor="#FF352C56"
+        android:strokeColor="#FF9878FF"
+        android:strokeWidth="2" />
+    <!-- Play icon in center short -->
+    <path android:pathData="M285,82 L303,93 L285,104 Z" android:fillColor="#FFFFFFFF" />
+    <!-- Caption pill in center short -->
+    <path android:pathData="M268,136 L314,136 A4,4 0 0 1 318,140 L318,148 A4,4 0 0 1 314,152 L268,152 A4,4 0 0 1 264,148 L264,140 A4,4 0 0 1 268,136 Z"
+        android:fillColor="#FF7652E8" />
+    <!-- Right back short -->
+    <path
+        android:pathData="M316,52 L344,52 A8,8 0 0 1 352,60 L352,144 A8,8 0 0 1 344,152 L316,152 A8,8 0 0 1 308,144 L308,60 A8,8 0 0 1 316,52 Z"
+        android:fillColor="#FF242132"
+        android:strokeColor="#66B9A6F6"
+        android:strokeWidth="1" />
+</vector>
