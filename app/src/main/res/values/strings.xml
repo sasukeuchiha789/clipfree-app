@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">ClipFree.ai</string>
+    <string name="brand_title">CLIPFREE.AI</string>
+    <string name="brand_tagline">Long Videos In. Viral-Ready Shorts Out.</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_projects">Projects</string>
+    <string name="nav_create">Create</string>
+    <string name="nav_library">Library</string>
+    <string name="nav_profile">Profile</string>
+
+    <!-- Auth -->
+    <string name="sign_in_google">Continue with Google</string>
+    <string name="continue_guest">Continue as Guest (Local Studio)</string>
+    <string name="auth_subtitle">Turn long-form videos into ready-to-post shorts with AI highlight detection, synced captions, and auto-reframing.</string>
+    <string name="auth_console_notice">Google Sign-In is enabled on this backend. Email/password auth can be enabled in Firebase Console if needed; Guest mode works locally without an account.</string>
+
+    <!-- Quota & AI Modes -->
+    <string name="quota_exhausted_message">Your free AI usage limit has been reached. Your saved clips and projects are still available. Try AI clipping again when your quota becomes available.</string>
+</resources>

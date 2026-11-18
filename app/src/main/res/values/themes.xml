@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.ClipFreeAI" parent="android:Theme.Material.NoActionBar" />
+
+    <style name="Theme.ClipFreeAI.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#17151F</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
+        <item name="postSplashScreenTheme">@style/Theme.ClipFreeAI</item>
+    </style>
+</resources>
