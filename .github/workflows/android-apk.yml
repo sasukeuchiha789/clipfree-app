@@ -1,0 +1,81 @@
+name: Android Debug APK Build
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-debug-apk:
+    name: Validate and Build Debug APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Locate Android project root
+        id: locate_project
+        shell: bash
+        run: |
+          if [ -f "settings.gradle.kts" ] && [ -f "app/build.gradle.kts" ]; then
+            echo "project_root=." >> "$GITHUB_OUTPUT"
+          elif [ -f "settings.gradle" ] && [ -f "app/build.gradle" ]; then
+            echo "project_root=." >> "$GITHUB_OUTPUT"
+          else
+            FOUND_SETTINGS=$(find . -maxdepth 3 \( -name "settings.gradle.kts" -o -name "settings.gradle" \) | head -n 1)
+            if [ -z "$FOUND_SETTINGS" ]; then
+              echo "Error: Could not locate Android project (settings.gradle / settings.gradle.kts missing)."
+              exit 1
+            fi
+            echo "project_root=$(dirname "$FOUND_SETTINGS")" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Detected Android project root: $(cat $GITHUB_OUTPUT)"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.3.1'
+
+      - name: Validate Gradle configuration and run unit tests
+        working-directory: ${{ steps.locate_project.outputs.project_root }}
+        run: |
+          if [ -x "./gradlew" ]; then
+            ./gradlew :app:testDebugUnitTest --no-daemon
+          else
+            gradle :app:testDebugUnitTest --no-daemon
+          fi
+
+      - name: Build Debug APK
+        working-directory: ${{ steps.locate_project.outputs.project_root }}
+        run: |
+          if [ -x "./gradlew" ]; then
+            ./gradlew :app:assembleDebug --no-daemon
+          else
+            gradle :app:assembleDebug --no-daemon
+          fi
+
+      - name: Verify Debug APK exists
+        working-directory: ${{ steps.locate_project.outputs.project_root }}
+        run: |
+          APK_PATH="app/build/outputs/apk/debug/app-debug.apk"
+          if [ ! -f "$APK_PATH" ]; then
+            echo "Error: Expected debug APK not found at $APK_PATH"
+            exit 1
+          fi
+          ls -lh "$APK_PATH"
+
+      - name: Upload Debug APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: clipfree-ai-debug-apk
+          path: ${{ steps.locate_project.outputs.project_root }}/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
