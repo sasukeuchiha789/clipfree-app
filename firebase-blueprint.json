@@ -1,0 +1,58 @@
+{
+  "entities": {
+    "CloudProject": {
+      "title": "CloudProject",
+      "description": "Synced CLIPFREE.AI project metadata stored only when user opts into cloud sync.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Authenticated Firebase UID of the project owner." },
+        "title": { "type": "string", "description": "Display title of the project (1-120 chars)." },
+        "sourceDurationMs": { "type": "integer", "description": "Original source video duration in milliseconds." },
+        "aspectRatio": { "type": "string", "enum": ["9:16", "16:9", "1:1", "4:5"], "description": "Target export aspect ratio." },
+        "status": { "type": "string", "enum": ["DRAFT", "PROCESSING", "COMPLETED", "FAILED", "PAUSED"], "description": "Current project processing state." },
+        "clipCount": { "type": "integer", "description": "Number of generated clips in this project." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on last update." }
+      },
+      "required": ["userId", "title", "sourceDurationMs", "aspectRatio", "status", "clipCount", "createdAt", "updatedAt"]
+    },
+    "CloudClip": {
+      "title": "CloudClip",
+      "description": "Synced AI-generated short clip metadata belonging to a CloudProject.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Authenticated Firebase UID of the clip owner." },
+        "projectId": { "type": "string", "description": "Parent CloudProject document ID." },
+        "title": { "type": "string", "description": "Catchy short clip title." },
+        "hook": { "type": "string", "description": "Opening hook text." },
+        "description": { "type": "string", "description": "Short clip social description." },
+        "reason": { "type": "string", "description": "Why AI selected this highlight." },
+        "viralityScore": { "type": "integer", "description": "Virality potential score from 0 to 100." },
+        "viralityReason": { "type": "string", "description": "Brief explanation of the virality score." },
+        "startMs": { "type": "integer", "description": "Start timestamp in milliseconds." },
+        "endMs": { "type": "integer", "description": "End timestamp in milliseconds." },
+        "language": { "type": "string", "description": "Detected speech language." },
+        "aspectRatio": { "type": "string", "enum": ["9:16", "16:9", "1:1", "4:5"], "description": "Target reframing ratio." },
+        "hashtags": { "type": "array", "description": "Suggested hashtags (max 15)." },
+        "captionStyle": { "type": "string", "description": "Selected caption preset name." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on last update." }
+      },
+      "required": [
+        "userId", "projectId", "title", "hook", "description", "reason",
+        "viralityScore", "viralityReason", "startMs", "endMs",
+        "language", "aspectRatio", "hashtags", "captionStyle", "createdAt", "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/projects/{projectId}": {
+      "schema": { "$ref": "#/entities/CloudProject" },
+      "description": "User-scoped synced video clipping projects."
+    },
+    "/users/{userId}/projects/{projectId}/clips/{clipId}": {
+      "schema": { "$ref": "#/entities/CloudClip" },
+      "description": "User-scoped AI-generated short clips for a synced project."
+    }
+  }
+}

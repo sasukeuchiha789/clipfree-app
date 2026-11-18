@@ -1,0 +1,161 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidAspectRatio(ratio) {
+      return ratio in ['9:16', '16:9', '1:1', '4:5'];
+    }
+
+    function isValidProjectStatus(status) {
+      return status in ['DRAFT', 'PROCESSING', 'COMPLETED', 'FAILED', 'PAUSED'];
+    }
+
+    function isValidProject(data) {
+      return data.userId is string &&
+             data.userId == request.auth.uid &&
+             data.title is string &&
+             data.title.size() >= 1 &&
+             data.title.size() <= 120 &&
+             data.sourceDurationMs is int &&
+             data.sourceDurationMs >= 0 &&
+             data.sourceDurationMs <= 86400000 &&
+             isValidAspectRatio(data.aspectRatio) &&
+             isValidProjectStatus(data.status) &&
+             data.clipCount is int &&
+             data.clipCount >= 0 &&
+             data.clipCount <= 50 &&
+             data.createdAt is timestamp &&
+             data.createdAt <= request.time &&
+             data.updatedAt is timestamp &&
+             data.updatedAt <= request.time;
+    }
+
+    function isValidClip(data, projectId) {
+      return data.userId is string &&
+             data.userId == request.auth.uid &&
+             data.projectId is string &&
+             data.projectId == projectId &&
+             data.title is string &&
+             data.title.size() >= 1 &&
+             data.title.size() <= 120 &&
+             data.hook is string &&
+             data.hook.size() <= 240 &&
+             data.description is string &&
+             data.description.size() <= 600 &&
+             data.reason is string &&
+             data.reason.size() <= 400 &&
+             data.viralityScore is int &&
+             data.viralityScore >= 0 &&
+             data.viralityScore <= 100 &&
+             data.viralityReason is string &&
+             data.viralityReason.size() <= 400 &&
+             data.startMs is int &&
+             data.startMs >= 0 &&
+             data.endMs is int &&
+             data.endMs > data.startMs &&
+             data.language is string &&
+             data.language.size() >= 1 &&
+             data.language.size() <= 40 &&
+             isValidAspectRatio(data.aspectRatio) &&
+             data.hashtags is list &&
+             data.hashtags.size() <= 15 &&
+             (data.hashtags.size() == 0 || data.hashtags[0] is string) &&
+             data.captionStyle is string &&
+             data.captionStyle.size() >= 1 &&
+             data.captionStyle.size() <= 40 &&
+             data.createdAt is timestamp &&
+             data.createdAt <= request.time &&
+             data.updatedAt is timestamp &&
+             data.updatedAt <= request.time;
+    }
+
+    match /users/{userId}/projects/{projectId} {
+      allow get: if isOwner(userId) && isValidId(projectId);
+      allow list: if isOwner(userId);
+
+      allow create: if isOwner(userId) &&
+                       isValidId(projectId) &&
+                       incoming().keys().hasAll([
+                         'userId', 'title', 'sourceDurationMs', 'aspectRatio',
+                         'status', 'clipCount', 'createdAt', 'updatedAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'userId', 'title', 'sourceDurationMs', 'aspectRatio',
+                         'status', 'clipCount', 'createdAt', 'updatedAt'
+                       ]) &&
+                       isValidProject(incoming());
+
+      allow update: if isOwner(userId) &&
+                       isValidId(projectId) &&
+                       isValidProject(incoming()) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'title', 'aspectRatio', 'status', 'clipCount', 'updatedAt'
+                       ]);
+
+      allow delete: if isOwner(userId) && isValidId(projectId);
+
+      match /clips/{clipId} {
+        allow get: if isOwner(userId) && isValidId(projectId) && isValidId(clipId);
+        allow list: if isOwner(userId);
+
+        allow create: if isOwner(userId) &&
+                         isValidId(projectId) &&
+                         isValidId(clipId) &&
+                         incoming().keys().hasAll([
+                           'userId', 'projectId', 'title', 'hook', 'description', 'reason',
+                           'viralityScore', 'viralityReason', 'startMs', 'endMs',
+                           'language', 'aspectRatio', 'hashtags', 'captionStyle', 'createdAt', 'updatedAt'
+                         ]) &&
+                         incoming().keys().hasOnly([
+                           'userId', 'projectId', 'title', 'hook', 'description', 'reason',
+                           'viralityScore', 'viralityReason', 'startMs', 'endMs',
+                           'language', 'aspectRatio', 'hashtags', 'captionStyle', 'createdAt', 'updatedAt'
+                         ]) &&
+                         isValidClip(incoming(), projectId) &&
+                         existsAfter(/databases/$(database)/documents/users/$(userId)/projects/$(projectId));
+
+        allow update: if isOwner(userId) &&
+                         isValidId(projectId) &&
+                         isValidId(clipId) &&
+                         isValidClip(incoming(), projectId) &&
+                         incoming().userId == existing().userId &&
+                         incoming().projectId == existing().projectId &&
+                         incoming().createdAt == existing().createdAt &&
+                         incoming().diff(existing()).affectedKeys().hasOnly([
+                           'title', 'hook', 'description', 'reason',
+                           'viralityScore', 'viralityReason', 'startMs', 'endMs',
+                           'language', 'aspectRatio', 'hashtags', 'captionStyle', 'updatedAt'
+                         ]);
+
+        allow delete: if isOwner(userId) && isValidId(projectId) && isValidId(clipId);
+      }
+    }
+  }
+}

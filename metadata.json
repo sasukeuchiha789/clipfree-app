@@ -1,0 +1,6 @@
+{
+  "name": "ClipFree.ai",
+  "description": "AI-powered automatic video clipping Android app: Long Videos In. Viral-Ready Shorts Out.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
