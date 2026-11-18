@@ -1,0 +1,36 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="240dp"
+    android:height="180dp"
+    android:viewportWidth="240"
+    android:viewportHeight="180">
+    <path android:pathData="M120,90m-72,0a72,72 0,1 1,144 0a72,72 0,1 1,-144 0">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:centerX="120"
+                android:centerY="90"
+                android:gradientRadius="72"
+                android:type="radial">
+                <item android:offset="0.0" android:color="#449878FF" />
+                <item android:offset="1.0" android:color="#009878FF" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- Clapperboard body -->
+    <path
+        android:pathData="M62,68 L178,68 A10,10 0 0 1 188,78 L188,136 A10,10 0 0 1 178,146 L62,146 A10,10 0 0 1 52,136 L52,78 A10,10 0 0 1 62,68 Z"
+        android:fillColor="#FF2B263F"
+        android:strokeColor="#FF7652E8"
+        android:strokeWidth="2" />
+    <!-- Clapper top -->
+    <path
+        android:pathData="M52,52 L182,36 L186,54 L56,70 Z"
+        android:fillColor="#FF7652E8" />
+    <path android:pathData="M74,49 L86,47 L76,68 L64,69 Z" android:fillColor="#FFB9A6F6" />
+    <path android:pathData="M114,44 L126,43 L116,63 L104,64 Z" android:fillColor="#FFB9A6F6" />
+    <path android:pathData="M154,39 L166,38 L156,58 L144,59 Z" android:fillColor="#FFB9A6F6" />
+    <!-- AI Spark in center -->
+    <path
+        android:pathData="M120,86 L125,102 L141,107 L125,112 L120,128 L115,112 L99,107 L115,102 Z"
+        android:fillColor="#FFB9A6F6" />
+</vector>
